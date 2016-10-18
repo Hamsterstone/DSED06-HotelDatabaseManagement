@@ -16,21 +16,30 @@ namespace DSED06_HotelDatabaseManagement.Business
        //if room extra person rate ==-1, no extra beds available.
         internal static void PayBill(int billNumber)
         {
-            
             Database.PayBill(billNumber);
         }
 
-        public static void BillForRoom(int roomNumber)
+        public static void BillForRoom(int roomNumber, int numberOfGuests,int lengthOfStay)
         {
-            int totalPrice=0;
-            
-                int basePrice = Database.ReturnRoomInformation(roomNumber).RoomBaseTariff;
-                int extraPrice = Database.ReturnRoomInformation(roomNumber).RoomExtraPersonRate*InfoPasserStatic.SelectedRoomsOverflow[roomNumber];
-                totalPrice += basePrice + extraPrice;
+            int totalPrice = 0;
+            Room thisRoom = Database.ReturnRoomInformation(roomNumber);
+            int numberOfSingles = Convert.ToInt32(InfoPasserStatic.RoomPasser.RoomNumSingleBeds);
+            int numberOfDoubles = Convert.ToInt32(InfoPasserStatic.RoomPasser.RoomNumDoubleBeds);
+            int baseGuests = Math.Min(numberOfGuests, (numberOfDoubles * 2) + numberOfSingles);
+            int overflowGuests = baseGuests - numberOfGuests;
+            if (overflowGuests < 0) { overflowGuests = 0;}
+            int basePrice = thisRoom.RoomBaseTariff;
+            int extraPrice = thisRoom.RoomExtraPersonRate*overflowGuests;
+            totalPrice += (basePrice + extraPrice)*lengthOfStay;
 
-           Database.AddBill(roomNumber,"Room",totalPrice);
-
-            
+            Database.AddBill(roomNumber, "Room", totalPrice);
         }
     }
 }
+
+/*
+ 
+     baseGuests = Math.Min(numberOfGuests,(numberOfDoubles*2) +numberOfSingles);
+            maxGuests = baseGuests + numberOfExtras;
+            
+     */

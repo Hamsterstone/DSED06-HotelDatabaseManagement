@@ -756,14 +756,14 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
             return roomInfo;
         }
-        public static BookingRoomJoin ReturnBookRoomJoinInformation(int bookingId)
+        public static List<BookingRoomJoin> ReturnBookRoomJoinInformation(int bookingId)
         {
-            BookingRoomJoin bookRoomInfo = new BookingRoomJoin();
+            List<BookingRoomJoin> bookRoomInfo = new List<BookingRoomJoin>();
             using (var context = new Entities())
             {
                 int id = bookingId;
                 var query = from b in context.BookingRoomJoins where b.BookingIDFK == id select b;
-                bookRoomInfo = query.FirstOrDefault();
+                bookRoomInfo = query.ToList();
             }
             return bookRoomInfo;
         }

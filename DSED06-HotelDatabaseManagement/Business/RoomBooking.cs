@@ -20,9 +20,17 @@ namespace DSED06_HotelDatabaseManagement.Business
             InfoPasserStatic.BookingPasser.BookingStatus = "Checked In";
             Database.UpdateBooking();
             //create new bill for room charge
-            
-            
-            
+            Booking thisBooking = Database.ReturnBookingInformation(InfoPasserStatic.BookingPasser.BookingID);
+            int lengthOfStay = (thisBooking.BookingTo - thisBooking.BookingFrom).Days;
+            List<BookingRoomJoin> thisBookingRoomJoins = Database.ReturnBookRoomJoinInformation(thisBooking.BookingID);
+            foreach (var room in thisBookingRoomJoins)
+            {
+                
+
+                GuestBilling.BillForRoom(room.RoomIDFK,room.NumberOfGuests,lengthOfStay);
+            }
+
+
         }
 
         internal static void CheckGuestOut()

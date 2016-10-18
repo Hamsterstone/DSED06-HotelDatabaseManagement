@@ -74,12 +74,7 @@ namespace DSED06_HotelDatabaseManagement
                     int numOfGuests = Convert.ToInt32(txtBookingGuestNumber.Text);
                     Dictionary<int,int> rooms = InfoPasserStatic.SelectedRooms; //=new List<int>() {2,3,4};
                     Database.AddBooking(guestID, dateFrom, dateTo, notes, rooms,numOfGuests);
-                    foreach (var room in rooms)
-                    {
-
-
-                        GuestBilling.BillForRoom(room.Key);
-                    }
+                    
                     
                     InfoPasserStatic.SelectedRooms.Clear();
                     InfoPasserStatic.SelectedRoomsOverflow.Clear();
