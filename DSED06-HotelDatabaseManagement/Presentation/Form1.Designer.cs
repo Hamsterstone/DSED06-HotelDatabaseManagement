@@ -45,6 +45,7 @@
             this.rbtBookingsAll = new System.Windows.Forms.RadioButton();
             this.dgvBooking = new System.Windows.Forms.DataGridView();
             this.tabRooms = new System.Windows.Forms.TabPage();
+            this.lbxRoomRate = new System.Windows.Forms.ListBox();
             this.btnRoomsSelect = new System.Windows.Forms.Button();
             this.pnlRoomsRbt = new System.Windows.Forms.Panel();
             this.rbtRoomsOccupied = new System.Windows.Forms.RadioButton();
@@ -88,17 +89,12 @@
             this.rbtBillsOpen = new System.Windows.Forms.RadioButton();
             this.rbtBillsAll = new System.Windows.Forms.RadioButton();
             this.dgvBilling = new System.Windows.Forms.DataGridView();
-            this.tabAdmin = new System.Windows.Forms.TabPage();
-            this.dgvAdmin = new System.Windows.Forms.DataGridView();
-            this.btnAdminLogout = new System.Windows.Forms.Button();
-            this.btnAdminLogin = new System.Windows.Forms.Button();
             this.bookingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dtpStart = new System.Windows.Forms.DateTimePicker();
             this.dtpEnd = new System.Windows.Forms.DateTimePicker();
             this.lblStartDate = new System.Windows.Forms.Label();
             this.lblEndDate = new System.Windows.Forms.Label();
             this.cbxFilterByDate = new System.Windows.Forms.CheckBox();
-            this.lbxRoomRate = new System.Windows.Forms.ListBox();
             this.tabControl1.SuspendLayout();
             this.tabBooking.SuspendLayout();
             this.pnlBookingRbt.SuspendLayout();
@@ -115,8 +111,6 @@
             this.pnlBillsCreate.SuspendLayout();
             this.pnlBillsRbt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBilling)).BeginInit();
-            this.tabAdmin.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvAdmin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bookingsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,7 +120,6 @@
             this.tabControl1.Controls.Add(this.tabRooms);
             this.tabControl1.Controls.Add(this.tabGuests);
             this.tabControl1.Controls.Add(this.tabBilling);
-            this.tabControl1.Controls.Add(this.tabAdmin);
             this.tabControl1.Location = new System.Drawing.Point(12, 90);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -297,6 +290,15 @@
             this.tabRooms.TabIndex = 1;
             this.tabRooms.Text = "Rooms";
             this.tabRooms.UseVisualStyleBackColor = true;
+            // 
+            // lbxRoomRate
+            // 
+            this.lbxRoomRate.FormattingEnabled = true;
+            this.lbxRoomRate.ItemHeight = 16;
+            this.lbxRoomRate.Location = new System.Drawing.Point(906, 147);
+            this.lbxRoomRate.Name = "lbxRoomRate";
+            this.lbxRoomRate.Size = new System.Drawing.Size(238, 228);
+            this.lbxRoomRate.TabIndex = 15;
             // 
             // btnRoomsSelect
             // 
@@ -748,47 +750,6 @@
             this.dgvBilling.TabIndex = 0;
             this.dgvBilling.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellContentClick);
             // 
-            // tabAdmin
-            // 
-            this.tabAdmin.Controls.Add(this.dgvAdmin);
-            this.tabAdmin.Controls.Add(this.btnAdminLogout);
-            this.tabAdmin.Controls.Add(this.btnAdminLogin);
-            this.tabAdmin.Location = new System.Drawing.Point(4, 25);
-            this.tabAdmin.Name = "tabAdmin";
-            this.tabAdmin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAdmin.Size = new System.Drawing.Size(1150, 466);
-            this.tabAdmin.TabIndex = 4;
-            this.tabAdmin.Text = "Admin";
-            this.tabAdmin.UseVisualStyleBackColor = true;
-            // 
-            // dgvAdmin
-            // 
-            this.dgvAdmin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAdmin.Location = new System.Drawing.Point(3, 3);
-            this.dgvAdmin.Name = "dgvAdmin";
-            this.dgvAdmin.RowTemplate.Height = 24;
-            this.dgvAdmin.Size = new System.Drawing.Size(800, 460);
-            this.dgvAdmin.TabIndex = 2;
-            this.dgvAdmin.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellContentClick);
-            // 
-            // btnAdminLogout
-            // 
-            this.btnAdminLogout.Location = new System.Drawing.Point(1069, 39);
-            this.btnAdminLogout.Name = "btnAdminLogout";
-            this.btnAdminLogout.Size = new System.Drawing.Size(75, 23);
-            this.btnAdminLogout.TabIndex = 1;
-            this.btnAdminLogout.Text = "Log Out";
-            this.btnAdminLogout.UseVisualStyleBackColor = true;
-            // 
-            // btnAdminLogin
-            // 
-            this.btnAdminLogin.Location = new System.Drawing.Point(1069, 9);
-            this.btnAdminLogin.Name = "btnAdminLogin";
-            this.btnAdminLogin.Size = new System.Drawing.Size(75, 23);
-            this.btnAdminLogin.TabIndex = 0;
-            this.btnAdminLogin.Text = "Log In";
-            this.btnAdminLogin.UseVisualStyleBackColor = true;
-            // 
             // bookingsBindingSource
             // 
             this.bookingsBindingSource.DataMember = "Bookings";
@@ -838,15 +799,6 @@
             this.cbxFilterByDate.UseVisualStyleBackColor = true;
             this.cbxFilterByDate.CheckedChanged += new System.EventHandler(this.CbxCheckedChangedCatcher);
             // 
-            // lbxRoomRate
-            // 
-            this.lbxRoomRate.FormattingEnabled = true;
-            this.lbxRoomRate.ItemHeight = 16;
-            this.lbxRoomRate.Location = new System.Drawing.Point(906, 147);
-            this.lbxRoomRate.Name = "lbxRoomRate";
-            this.lbxRoomRate.Size = new System.Drawing.Size(238, 228);
-            this.lbxRoomRate.TabIndex = 15;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -884,8 +836,6 @@
             this.pnlBillsRbt.ResumeLayout(false);
             this.pnlBillsRbt.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBilling)).EndInit();
-            this.tabAdmin.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvAdmin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bookingsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -903,10 +853,6 @@
         private System.Windows.Forms.DataGridView dgvGuests;
         private System.Windows.Forms.TabPage tabBilling;
         private System.Windows.Forms.DataGridView dgvBilling;
-        private System.Windows.Forms.TabPage tabAdmin;
-        private System.Windows.Forms.DataGridView dgvAdmin;
-        private System.Windows.Forms.Button btnAdminLogout;
-        private System.Windows.Forms.Button btnAdminLogin;
         private System.Windows.Forms.BindingSource bookingsBindingSource;
         private System.Windows.Forms.TextBox txtGuestPhone;
         private System.Windows.Forms.TextBox txtGuestAddress;

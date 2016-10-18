@@ -67,7 +67,6 @@
     <Compile Include="Data\BookingRoomJoin.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Business\Admin.cs" />
     <Compile Include="Business\GuestBilling.cs" />
     <Compile Include="Business\RoomBooking.cs" />
     <Compile Include="Data\Database.cs" />

@@ -13,19 +13,13 @@ namespace DSED06_HotelDatabaseManagement.Data
 {
     public static class Database
     {
+        //Fake DataGridViews that the DGVs on form1 are linked to
         public static DataGridView FakeDgvAdmin { get; set; }
         public static DataGridView FakeDgvBilling { get; set; }
         public static DataGridView FakeDgvBooking { get; set; }
         public static DataGridView FakeDgvRooms { get; set; }
         public static DataGridView FakeDgvGuests { get; set; }
-        ////load datagridviews
-        ////add guest
-        ////edit guest information
-        ////add room
-        ////edit room details
-        ////add/update bills
-        ////create/update booking
-        //search guest/booking/bill/room
+        
         public static void AddGuest(string name, string address, string phone, string notes)
         {
             using (var context = new Entities())
@@ -41,7 +35,7 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
         }
 
-        //For Admin completeness, never used.
+        //For future Admin completeness, never used.
         public static void AddRoom(int singles, int doubles, int tarrif, int extraPerson, string features)
         {
             using (var context = new Entities())
@@ -63,15 +57,19 @@ namespace DSED06_HotelDatabaseManagement.Data
 
             using (var context = new Entities())
             {
+                //create a temporary Booking object
                 var newBooking = new Booking();
+                //Fill it with the information supplied
                 newBooking.GuestIDFK = guest;
                 newBooking.BookingFrom = from;
                 newBooking.BookingTo = to;
                 newBooking.BookingNotes = notes;
+                //All new bookings are automatically "Pending"
                 newBooking.BookingStatus = "Pending";
                 newBooking.BookingNumberOfGuests = numOfGuests;
+                //Add the temporary booking to the local database model
                 context.Bookings.Add(newBooking);
-                // context.SaveChanges();
+                //Create a new booking/room join entry for each room in the the booking
                 foreach (var roomGuestPair in rooms)
                 {
                     var newBookingRoomJoin = new BookingRoomJoin();
@@ -81,6 +79,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                     context.BookingRoomJoins.Add(newBookingRoomJoin);
 
                 }
+                //save the changes to the model back to the database
                 context.SaveChanges();
 
             }
@@ -95,7 +94,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                 var bookid =
                     from b in
                         context.BookingRoomJoins.Where(
-                            b => b.RoomIDFK == roomNumber && b.Booking.BookingStatus == "Checked In")
+                            b => b.RoomIDFK == roomNumber && b.Booking.BookingStatus == "Checked In")//"Checked In" used to locate the currently active booking/guest to be billed
                     select b.ID;
                 newBill.BookingRoomJoinIDFK = bookid.FirstOrDefault();
 
@@ -117,13 +116,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                 context.Billings.Add(newBill);
                 context.SaveChanges();
             }
-            //Invoice_No = b.BillingID,
-            //            b.Booking.BookingID,
-            //            Bar_Charge = b.BarCharge,
-            //            Phone_Charge = b.PhoneCharge,
-            //            Room_Charge = b.RoomCharge,
-            //            WiFi_Charge = b.WiFiCharge,
-            //            Paid = b.BillingPaid
+
         }
 
         public static void UpdateGuest()
@@ -131,12 +124,15 @@ namespace DSED06_HotelDatabaseManagement.Data
             using (var context = new Entities())
             {
                 int id = Convert.ToInt32(InfoPasserStatic.GuestID);
+                //Find the entry from the GuestID 
                 var query = from g in context.Guests where g.GuestID == id select g;
                 var guest = query.FirstOrDefault();
+                //Update the entry from the information in the data transfer class
                 guest.GuestName = InfoPasserStatic.GuestPasser.GuestName;
                 guest.GuestAddress = InfoPasserStatic.GuestPasser.GuestAddress;
                 guest.GuestTelephone = InfoPasserStatic.GuestPasser.GuestTelephone;
                 guest.GuestNotes = InfoPasserStatic.GuestPasser.GuestNotes;
+                //Save the changes up to the database
                 context.SaveChanges();
             }
         }
@@ -175,20 +171,8 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
         }
 
-        public static void PayBill(int billNumber)
-        {
-            using (var context = new Entities())
-            {
-                
-                var query = from b in context.Billings where b.BillingID == billNumber
-                            select b;
-                var bill = query.FirstOrDefault();
-               
-                bill.BillingPaid = true;
-                context.SaveChanges();
-            }
-        }
-
+     
+        //Not used, included for future Admin use
         public static void UpdateRoom(int singleBeds, int doubleBeds, int baseTariff, int extraPersonRate,
             string extraFeatures)
         {
@@ -206,9 +190,23 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
         }
 
+        public static void PayBill(int billNumber)
+        {
+            using (var context = new Entities())
+            {
+                var query = from b in context.Billings
+                    where b.BillingID == billNumber
+                    select b;
+                var bill = query.FirstOrDefault();
 
+                bill.BillingPaid = true;
+                context.SaveChanges();
+            }
+        }
+        //Updates FakeDGVRooms based on radiobutton selection
         public static void FillFakeDgvRooms()
         {
+            //Switched based on which radiobutton is selected
             switch (InfoPasserStatic.rbtRoomCurrentState)
             {
                 case "All":
@@ -231,9 +229,11 @@ namespace DSED06_HotelDatabaseManagement.Data
                 case "Free":
                     using (var context = new Entities())
                     {
+                        //find occupied rooms
                         var roomsOccupied = FindOccupiedRooms();
+
                         var alldata = from r in context.Rooms
-                            where (!roomsOccupied.Contains(r.RoomID))
+                            where (!roomsOccupied.Contains(r.RoomID))//Ignore data entries that match the occupied room list
                             select new
                             {
                                 Room_Number = r.RoomID,
@@ -247,12 +247,13 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvRooms.DataSource = alldata.ToList();
                     }
                     break;
+
                 case "Occupied":
                     using (var context = new Entities())
                     {
                         var roomsOccupied = FindOccupiedRooms();
                         var alldata = from r in context.Rooms
-                            where (roomsOccupied.Contains(r.RoomID))
+                            where (roomsOccupied.Contains(r.RoomID))//Select only entries that match occupied room list
                             select new
                             {
                                 Room_Number = r.RoomID,
@@ -269,7 +270,7 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
 
         }
-
+        //Fills FakeDGVRooms with data between dates supplied
         public static void FillFakeDgvRooms(DateTime start, DateTime end)
         {
             switch (InfoPasserStatic.rbtRoomCurrentState)
@@ -354,6 +355,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvBilling.DataSource = alldata.ToList();
                     }
                     break;
+                    //Shows bills that have not been paid.
                 case "Open":
                     using (var context = new Entities())
                     {
@@ -371,6 +373,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvBilling.DataSource = alldata.ToList();
                     }
                     break;
+                    //Identical to above, legacy from earlier ideas now scrapped. Kept for radio button symetry on form.
                 case "Pay":
                     using (var context = new Entities())
                     {
@@ -463,6 +466,7 @@ namespace DSED06_HotelDatabaseManagement.Data
         {
             switch (InfoPasserStatic.rbtBookingCurrentState)
             {
+                //Shows bookings with a start date later than today
                 case "Future":
                     using (var context = new Entities())
                     {
@@ -471,7 +475,6 @@ namespace DSED06_HotelDatabaseManagement.Data
 
                             select new
                             {
-                                //may need to use join table info
                                 j.Booking.BookingID,
                                 Guest_Name = j.Booking.Guest.GuestName,
                                 From = j.Booking.BookingFrom,
@@ -493,7 +496,6 @@ namespace DSED06_HotelDatabaseManagement.Data
 
                             select new
                             {
-                                //may need to use join table info
                                 j.Booking.BookingID,
                                 Guest_Name = j.Booking.Guest.GuestName,
                                 From = j.Booking.BookingFrom,
@@ -507,6 +509,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvBooking.DataSource = alldata.ToList();
                     }
                     break;
+                    //Shows bookings that have a start date of today or earlier and an end date of today or later
                 case "Current":
                     using (var context = new Entities())
                     {
@@ -519,7 +522,6 @@ namespace DSED06_HotelDatabaseManagement.Data
 
                             select new
                             {
-                                //may need to use join table info
                                 j.Booking.BookingID,
                                 Guest_Name = j.Booking.Guest.GuestName,
                                 From = j.Booking.BookingFrom,
@@ -548,7 +550,6 @@ namespace DSED06_HotelDatabaseManagement.Data
 
                                       select new
                                       {
-                                          //may need to use join table info
                                           j.Booking.BookingID,
                                           Guest_Name = j.Booking.Guest.GuestName,
                                           From = j.Booking.BookingFrom,
@@ -570,7 +571,6 @@ namespace DSED06_HotelDatabaseManagement.Data
 
                                       select new
                                       {
-                                          //may need to use join table info
                                           j.Booking.BookingID,
                                           Guest_Name = j.Booking.Guest.GuestName,
                                           From = j.Booking.BookingFrom,
@@ -584,6 +584,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvBooking.DataSource = alldata.ToList();
                     }
                     break;
+                    //ignores supplied datetines and returns the same info as dateless method
                 case "Current":
                     using (var context = new Entities())
                     {
@@ -596,7 +597,6 @@ namespace DSED06_HotelDatabaseManagement.Data
 
                             select new
                             {
-                                //may need to use join table info
                                 j.Booking.BookingID,
                                 Guest_Name = j.Booking.Guest.GuestName,
                                 From = j.Booking.BookingFrom,
@@ -633,6 +633,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvGuests.DataSource = alldata.ToList();
                     }
                     break;
+                    //Shows guests with booking dates that include todays date.
                 case "Current":
                     using (var context = new Entities())
                     {
@@ -648,6 +649,7 @@ namespace DSED06_HotelDatabaseManagement.Data
                         FakeDgvGuests.DataSource = alldata.ToList();
                     }
                     break;
+                    //Shows guests with bookings from today forward
                 case "Pending":
                     using (var context = new Entities())
                     {
@@ -666,24 +668,7 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
         }
 
-        
-        public static List<int> FindBookedRooms()
-        {
-            List<int> fullRoomsList = new List<int>();
-
-            using (var context = new Entities())
-            {
-                var fullRooms =
-                    context.BookingRoomJoins.Where(
-                        j => j.Booking.BookingStatus != "Checked In" || j.Booking.BookingStatus != "Overdue")
-                        .Select(j => new {j.Room.RoomID})
-                        .ToList();
-                fullRoomsList.AddRange(fullRooms.Select(r => r.RoomID));
-            }
-
-
-            return fullRoomsList;
-        }
+       //returns a list of room numbers where a guest/booking is listed as checked in.
 
         public static List<int> FindOccupiedRooms()
         {
@@ -702,7 +687,7 @@ namespace DSED06_HotelDatabaseManagement.Data
 
             return fullRoomsList;
         }
-
+        //returns a list of rooms where an attached bill is unpaid
         internal static List<int> FindUnpaidBillRooms()
         {
             List<int> unpaidBillRoomsList = new List<int>();
@@ -717,14 +702,9 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
             return unpaidBillRoomsList;
         }
-        //find rooms available in date range+
-        //find rooms booked in date range
+        
 
-
-
-
-
-        //find rooms occupied between date range
+        //returns a list of rooms occupied between date range
         public static List<int> FindOccupiedRooms(DateTime start, DateTime end)
         {
             List<int> fullRoomsList = new List<int>();
@@ -744,7 +724,7 @@ namespace DSED06_HotelDatabaseManagement.Data
 
             return fullRoomsList;
         }
-       
+       //returns a room object from a given roomID
         public static Room ReturnRoomInformation(int roomId)
         {
             Room roomInfo=new Room();
@@ -756,6 +736,7 @@ namespace DSED06_HotelDatabaseManagement.Data
             }
             return roomInfo;
         }
+        //returns a list of bookingroomjoins from a given booking ID 
         public static List<BookingRoomJoin> ReturnBookRoomJoinInformation(int bookingId)
         {
             List<BookingRoomJoin> bookRoomInfo = new List<BookingRoomJoin>();

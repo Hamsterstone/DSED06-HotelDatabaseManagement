@@ -10,6 +10,7 @@ namespace DSED06_HotelDatabaseManagement.Business
 {
     static class InfoPasserStatic
     {
+        //Data Transfer Class with defaults set
         public static int RoomID = -1;
         public static int GuestID = -1;
         public static int BookingID = -1;
@@ -25,7 +26,7 @@ namespace DSED06_HotelDatabaseManagement.Business
         public static Guest GuestPasser = new Guest();
         public static string rbtBookingCurrentState="Current";
         public static string rbtRoomCurrentState = "Free";
-        public static string rbtGuestCurrentState = "Current";
+        public static string rbtGuestCurrentState = "All";
         public static string rbtBillingCurrentState = "Open";
         public static Dictionary<int,int> SelectedRooms=new Dictionary<int, int>();
         public static Dictionary<int, int> SelectedRoomsOverflow = new Dictionary<int, int>();
